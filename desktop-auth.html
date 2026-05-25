@@ -142,7 +142,7 @@
       signInWithPopup(auth, provider).then(async (result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const accessToken = credential.accessToken;
-        const idToken = await result.user.getIdToken();
+        const idToken = credential.idToken;
         
         btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Redirigiendo a Zenwii...';
         
