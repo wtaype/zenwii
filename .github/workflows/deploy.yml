@@ -1,4 +1,4 @@
-name: 🚀 Deploy zenwii-web
+name: 🚀 Deploy zenwii
 on:
   push:
     branches: [main]
@@ -36,7 +36,7 @@ jobs:
       # 🐙 GitHub Pages: Compila y despliega dinámicamente con base path ajustado
       - name: 🐙 GitHub Pages
         env:
-          VITE_BASE: ${{ github.ref_type == 'tag' && format('/zenwii-web/{0}/', github.ref_name) || '/zenwii-web/' }}
+          VITE_BASE: ${{ github.ref_type == 'tag' && format('/zenwii/{0}/', github.ref_name) || '/zenwii/' }}
         run: pnpm build
       - uses: peaceiris/actions-gh-pages@v4
         with:
