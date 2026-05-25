@@ -1258,6 +1258,6 @@
   </div>
 </body>
 <script>(() => { const d = document, h = d.documentElement, w = d.querySelector('#wiTema'); if (!w) return; const ts = [...w.querySelectorAll('.tema')], m = d.querySelector('meta[name="theme-color"]') || d.head.appendChild(Object.assign(d.createElement('meta'), { name: 'theme-color' })), st = t => { const [n, c] = t.dataset.ths.split('|'); h.dataset.theme = n; m.content = c; localStorage.wiTema = t.dataset.ths; ts.forEach(x => x.classList.toggle('mtha', x === t)) }; w.addEventListener('click', e => e.target.matches('.tema') && st(e.target), { passive: !0 }); const i = w.querySelector(`[data-ths="${localStorage.wiTema}"]`) || w.querySelector('.tema.mtha') || ts[3]; i && st(i) })();</script>
-<script type="module" src="../notas/main.js" defer></script>
+<script type="module" src="./notas/main.js" defer></script>
 
 </html>
