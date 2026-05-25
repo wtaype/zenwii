@@ -1,0 +1,385 @@
+.wd_beneficios_page {
+    color: var(--tx);
+    padding-bottom: 8vh;
+    width: 100%;
+}
+
+/* Clases para el Intersection Observer (Lazy Load visual) */
+.wd_bn_anim {
+    opacity: 0;
+    transform: translateY(4vh);
+}
+
+.wd_bn_fade_up {
+    animation: ini_fade_up_anim 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes ini_fade_up_anim {
+    from { opacity: 0; transform: translateY(4vh); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.wd_bn_hero {
+    text-align: center;
+    padding: 10vh 2vw 8vh;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--mco) 8%, transparent), transparent);
+    border-bottom: 1px solid var(--brd);
+    width: 100%;
+}
+
+.ini_badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8vh;
+    background: color-mix(in srgb, var(--mco) 10%, transparent);
+    color: var(--mco);
+    padding: 0.6vh 1.5vh;
+    border-radius: 50px;
+    font-size: var(--fz_s3);
+    font-weight: 700;
+    margin-bottom: 2vh;
+    border: 1px solid color-mix(in srgb, var(--mco) 30%, transparent);
+}
+
+.wd_bn_hero h1 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    margin-bottom: 2vh;
+    background: linear-gradient(135deg, var(--mco) 0%, var(--bg2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+.wd_bn_hero p {
+    font-size: var(--fz_m4);
+    color: var(--tx2);
+    max-width: 700px;
+    margin: 0 auto 4vh;
+    line-height: 1.6;
+}
+
+.wd_bn_cta_main, .wd_bn_cta_large {
+    display: inline-flex;
+    align-items: center;
+    gap: 1vh;
+    background: var(--mco);
+    color: var(--txa);
+    padding: 1.4vh 2.8vw;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: var(--fz_m3);
+    transition: transform var(--tr_m), box-shadow var(--tr_m), filter var(--tr_m);
+    box-shadow: 0 4px 16px rgba(0,0,0,.2);
+}
+
+.wd_bn_cta_main:hover, .wd_bn_cta_large:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(0,0,0,.28);
+    filter: brightness(1.1);
+}
+
+.wd_bn_features {
+    width: 100%;
+    padding: 8vh 2vw;
+    display: flex;
+    flex-direction: column;
+    gap: 12vh;
+}
+
+.wd_bn_feature {
+    display: flex;
+    align-items: center;
+    gap: 6vw;
+    width: 100%;
+}
+
+.wd_bn_feature.reverse {
+    flex-direction: row-reverse;
+}
+
+.wd_bn_feature_text {
+    flex: 1;
+    padding: 0 4vw;
+    position: relative;
+}
+
+/* Tag superior del Beneficio */
+.wd_bn_tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8vh;
+    font-size: var(--fz_s2);
+    font-weight: 800;
+    color: var(--mco);
+    background: color-mix(in srgb, var(--mco) 8%, transparent);
+    padding: 0.5vh 1.4vh;
+    border-radius: 6px;
+    margin-bottom: 2vh;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid color-mix(in srgb, var(--mco) 15%, transparent);
+}
+
+.wd_bn_feature_text h2 {
+    font-size: var(--fz_x1);
+    margin-bottom: 1.5vh;
+    color: var(--tx);
+    font-weight: 800;
+    line-height: 1.25;
+}
+
+.wd_bn_feature_text p {
+    font-size: var(--fz_m3);
+    color: var(--tx2);
+    line-height: 1.6;
+    margin-bottom: 3.5vh;
+}
+
+/* Listas de Marketing */
+.wd_bn_list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 3.5vh 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+}
+
+.wd_bn_list li {
+    font-size: var(--fz_m2);
+    color: var(--tx2);
+    display: flex;
+    align-items: center;
+    gap: 2vh;
+    line-height: 1.4;
+    background: color-mix(in srgb, var(--wb) 45%, transparent);
+    padding: 1.5vh 2.2vh;
+    border-radius: 14px;
+    border: 1px solid var(--brd);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                background-color 0.3s ease, 
+                box-shadow 0.3s ease;
+}
+
+.wd_bn_list li:hover {
+    background: var(--wb);
+    transform: translateX(6px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+}
+
+/* Envoltorio de Icono Colorido */
+.wd_bn_ico_wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 12px;
+    font-size: 1.15rem;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+.wd_bn_list li:hover .wd_bn_ico_wrap {
+    transform: scale(1.12) rotate(4deg);
+    filter: brightness(1.08);
+}
+
+.wd_bn_list li strong {
+    display: block;
+    color: var(--tx);
+    font-weight: 700;
+    font-size: var(--fz_m2);
+    margin-bottom: 0.2vh;
+}
+
+.wd_bn_list li span {
+    font-size: var(--fz_m);
+    color: var(--tx2);
+    display: block;
+    font-weight: 400;
+}
+
+/* Chips / Botones informativos */
+.wd_bn_chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2vh;
+}
+
+.wd_bn_chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8vh;
+    padding: 0.8vh 1.8vh;
+    background: color-mix(in srgb, var(--mco) 6%, var(--bg));
+    border: 1px solid color-mix(in srgb, var(--mco) 16%, var(--brd));
+    border-radius: 50px;
+    font-size: var(--fz_s3);
+    font-weight: 600;
+    color: var(--mco);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: default;
+}
+
+.wd_bn_chip:hover {
+    background: color-mix(in srgb, var(--mco) 12%, var(--bg));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--mco) 15%, transparent);
+}
+
+.wd_bn_feature_img {
+    flex: 1;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 24px 64px rgba(0,0,0,.16), 0 4px 12px rgba(0,0,0,.08);
+    border: 1px solid var(--brd);
+    background: var(--wb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 350px;
+    transition: transform var(--tr_m), box-shadow var(--tr_m);
+    position: relative;
+}
+
+.wd_bn_feature_img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.wd_bn_feature_img:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 32px 80px color-mix(in srgb, var(--mco) 20%, transparent);
+}
+
+.wd_bn_feature_img:hover img {
+    transform: scale(1.03);
+}
+
+/* CTA Final */
+.wd_bn_final_cta {
+    text-align: center;
+    padding: 8vh 4vw;
+    background: var(--wb);
+    border-radius: 22px;
+    width: 90%;
+    max-width: 1200px;
+    margin: 6vh auto 0;
+    border: 1px solid var(--brd);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+}
+
+.wd_bn_cta_bg_glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 10%, color-mix(in srgb, var(--mco) 8%, transparent) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.wd_bn_final_cta h2 {
+    font-size: var(--fz_x2);
+    margin-bottom: 2vh;
+    font-weight: 900;
+    color: var(--tx);
+    position: relative;
+    z-index: 1;
+}
+
+.wd_bn_final_cta p {
+    font-size: var(--fz_m4);
+    color: var(--tx2);
+    margin-bottom: 4vh;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+    position: relative;
+    z-index: 1;
+}
+
+.wd_bn_final_cta .ini_btns {
+    position: relative;
+    z-index: 1;
+}
+
+/* Trust Grid para Marketing */
+.wd_bn_trust_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 3vh;
+    border-top: 1px solid var(--brd);
+    padding-top: 4vh;
+    margin-top: 2vh;
+    position: relative;
+    z-index: 1;
+}
+
+.wd_bn_trust_item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2vh;
+    font-size: var(--fz_m1);
+    font-weight: 600;
+    color: var(--tx2);
+}
+
+.wd_bn_trust_item i {
+    font-size: var(--fz_m3);
+}
+
+@media (max-width: 992px) {
+    .wd_bn_feature, .wd_bn_feature.reverse {
+        flex-direction: column;
+        gap: 6vh;
+    }
+    
+    .wd_bn_feature_text {
+        padding: 0 2vw;
+        text-align: left; /* Keep left alignment for text to match standard UI lists on mobile */
+    }
+
+    .wd_bn_feature_text h2 {
+        text-align: center;
+    }
+
+    .wd_bn_feature_text > p {
+        text-align: center;
+    }
+
+    .wd_bn_tag {
+        display: flex;
+        margin: 0 auto 2.5vh;
+        width: fit-content;
+    }
+
+    .wd_bn_chips {
+        justify-content: center;
+    }
+
+    .wd_bn_features {
+        gap: 10vh;
+    }
+
+    .wd_bn_trust_grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2vh;
+    }
+}
+
+@media (max-width: 576px) {
+    .wd_bn_trust_grid {
+        grid-template-columns: 1fr;
+        gap: 2vh;
+    }
+}
+
