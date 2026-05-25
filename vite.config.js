@@ -8,7 +8,7 @@ export default defineConfig({
     modulePreload: false,
     rollupOptions: {
       input: 'index.html',
-      nota: 'nota.html',
+      nota: 'nota.html', 
       output: {
         manualChunks: id => {
           if (id.includes('node_modules')) return id.includes('firebase') ? 'firebase' : 'vendor';
