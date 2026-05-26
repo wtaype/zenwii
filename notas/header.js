@@ -85,15 +85,20 @@ export const renderAuthHeader = (wi, act) => {
   if (!$container.length) return;
 
   if (wi) {
-    const cloudStatus = act?.synced 
-      ? `<i class="fas fa-cloud wd_cloud_ok" style="margin-right: 1.5vh;" ${wiTip('Todos los cambios sincronizados', undefined, 'bottom')}></i>`
-      : act ? `<i class="fas fa-cloud-arrow-up wd_cloud_pen" style="margin-right: 1.5vh;" ${wiTip('Cambios locales sin subir', undefined, 'bottom')}></i>` : '';
-
+    // Real-time sync toggle state (persisted in localStorage)
+    const rtSyncOn = localStorage.getItem('wd_realtime_sync') !== 'off';
+    const cloudState = act?.synced ? 'ok' : (act ? 'pen' : 'ok');
+    const cloudTip = rtSyncOn ? 'Sincronización en tiempo real: ON — haz clic para pausar' : 'Sincronización en tiempo real: OFF — haz clic para activar';
     const avatarUrl = wi.avatar || `${import.meta.env.BASE_URL || '/'}smile.avif`;
 
     $container.html(`
       <div class="wd_hdr_user_info" style="display:flex; gap:1.5vh; align-items:center;">
-        ${cloudStatus}
+        <label class="wd_rt_toggle" ${wiTip(cloudTip, undefined, 'bottom')} title="${cloudTip}">
+          <input type="checkbox" id="wd_rt_sync_toggle" ${rtSyncOn ? 'checked' : ''} />
+          <span class="wd_rt_track">
+            <i class="fas ${rtSyncOn ? 'fa-cloud' : 'fa-cloud-arrow-up'} wd_rt_icon"></i>
+          </span>
+        </label>
         <a href="/perfil" target="_blank" class="nv_item" ${wiTip('Ver mi perfil', undefined, 'bottom')}>
           <img src="${avatarUrl}" alt="${wi.nombre || wi.usuario}">
           <span>${wi.nombre || wi.usuario}</span>
@@ -104,6 +109,23 @@ export const renderAuthHeader = (wi, act) => {
         </button>
       </div>
     `);
+
+    // Wire toggle change
+    const toggle = document.getElementById('wd_rt_sync_toggle');
+    if (toggle) {
+      toggle.addEventListener('change', () => {
+        const on = toggle.checked;
+        localStorage.setItem('wd_realtime_sync', on ? 'on' : 'off');
+        const icon = toggle.closest('.wd_rt_toggle')?.querySelector('.wd_rt_icon');
+        if (icon) {
+          icon.className = `fas ${on ? 'fa-cloud' : 'fa-cloud-arrow-up'} wd_rt_icon`;
+        }
+        const tip = on ? 'Sincronización en tiempo real: ON — haz clic para pausar' : 'Sincronización en tiempo real: OFF — haz clic para activar';
+        toggle.closest('.wd_rt_toggle')?.setAttribute('title', tip);
+        // Notify the app about the change
+        window.dispatchEvent(new CustomEvent('wd_rt_sync_changed', { detail: { on } }));
+      });
+    }
   } else {
     $container.html(`
       <div class="wd_hdr_auth_buttons" style="display:flex; gap:1.5vh; align-items:center;">

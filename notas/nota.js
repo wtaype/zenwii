@@ -538,7 +538,9 @@ export const init = async () => {
 
   // Autoguardado debounced (2.5s) en segundo plano
   const queueDebouncedSave = () => {
-    if (!wiAuth.user || !act) return;
+    // Respetar el toggle de sincronización en tiempo real
+    const rtSyncOn = localStorage.getItem('wd_realtime_sync') !== 'off';
+    if (!rtSyncOn || !wiAuth.user || !act) return;
     clearTimeout(saveDebounceTimer);
     saveDebounceTimer = setTimeout(() => {
       if (!act) return;
@@ -949,6 +951,24 @@ export const init = async () => {
 
       if (docs.length) cargarDocUI(sorted()[0]); else crearNuevo();
     }
+  });
+
+  // Sincronización en tiempo real: escucha cambios del toggle
+  window.addEventListener('wd_rt_sync_changed', async (e) => {
+    const on = e.detail?.on;
+    if (on && wiAuth.user) {
+      // Activando: cargar nube y refrescar editor inmediatamente
+      Notificacion('Tiempo real activado. Actualizando...', 'info');
+      const remotos = await cargarNube();
+      if (remotos && remotos.length) {
+        docs = remotos;
+        ls.set(docs);
+        // Refrescar el doc activo si existe en la nube
+        const remoteAct = act ? remotos.find(x => x.id === act.id) || remotos[0] : remotos[0];
+        if (remoteAct) cargarDocUI(remoteAct);
+      }
+    }
+    // Al desactivar: nada extra — próximos saves no van a la nube
   });
 
   console.log(`📝 ${app} ${version} · Notas Offline-First con Pestañas OK`);
