@@ -203,20 +203,35 @@ const getFS = async () => {
 
 const getDocId = (d, wi) => {
   if (!wi?.usuario) return d.id;
-  const prefix = wi.usuario.toLowerCase().replace(/[^a-z0-9]/g, '');
-  const timestamp = d.id.startsWith('wd') ? d.id.replace('wd', '') : d.id;
-  return prefix + timestamp;
+  let username = wi.usuario || wi.email || "nota";
+  if (username.includes("@")) {
+    username = username.split("@")[0];
+  }
+  const cleanUsername = username.toLowerCase().replace(/[^a-z0-9_-]/g, "");
+  const ts = d.creado || Date.now();
+  return `${cleanUsername}_${ts}`;
 };
 
 const guardarNube = async (d) => {
-  const wi = wiAuth.user; if (!wi?.email) return;
+  const wi = wiAuth.user; if (!wi?.email) return d.id;
   try {
     const { db, doc, setDoc, serverTimestamp } = await getFS();
     const guardadoCreado = d.creado ? new Date(d.creado) : serverTimestamp();
     const guardadoActualizado = d.actualizado ? new Date(d.actualizado) : serverTimestamp();
-    await setDoc(doc(db, 'notas', getDocId(d, wi)), {
-      id: d.id,
-      usuario: wi.usuario || wi.email.split('@')[0],
+    const docId = getDocId(d, wi);
+
+    if (d.id && d.id !== docId) {
+      try {
+        const { deleteDoc } = await import('firebase/firestore');
+        await deleteDoc(doc(db, 'notas', d.id));
+      } catch (e) {
+        console.warn('[delete-old-remote-failed]', e);
+      }
+    }
+
+    await setDoc(doc(db, 'notas', docId), {
+      id: docId,
+      usuario: wi.usuario ? wi.usuario.toLowerCase().replace(/[^a-z0-9_-]/g, "") : wi.email.split('@')[0],
       email: wi.email,
       titulo: String(d.titulo || ''),
       contenido: String(d.contenido || ''),
@@ -225,17 +240,32 @@ const guardarNube = async (d) => {
       creado: guardadoCreado,
       actualizado: guardadoActualizado
     });
-  } catch(e) { console.error('[notas] guardarNube:', e); }
+    return docId;
+  } catch(e) {
+    console.error('[notas] guardarNube:', e);
+    return d.id;
+  }
 };
 
 const actualizarNube = async (d) => {
-  const wi = wiAuth.user; if (!wi?.email) return;
+  const wi = wiAuth.user; if (!wi?.email) return d.id;
   try {
     const { db, doc, setDoc, serverTimestamp } = await getFS();
     const guardadoActualizado = d.actualizado ? new Date(d.actualizado) : serverTimestamp();
-    await setDoc(doc(db, 'notas', getDocId(d, wi)), {
-      id: d.id,
-      usuario: wi.usuario || wi.email.split('@')[0],
+    const docId = getDocId(d, wi);
+
+    if (d.id && d.id !== docId) {
+      try {
+        const { deleteDoc } = await import('firebase/firestore');
+        await deleteDoc(doc(db, 'notas', d.id));
+      } catch (e) {
+        console.warn('[delete-old-remote-failed]', e);
+      }
+    }
+
+    await setDoc(doc(db, 'notas', docId), {
+      id: docId,
+      usuario: wi.usuario ? wi.usuario.toLowerCase().replace(/[^a-z0-9_-]/g, "") : wi.email.split('@')[0],
       email: wi.email,
       titulo: String(d.titulo || ''),
       contenido: String(d.contenido || ''),
@@ -243,14 +273,25 @@ const actualizarNube = async (d) => {
       pin: !!d.pin,
       actualizado: guardadoActualizado
     }, { merge: true });
-  } catch(e) { console.error('[notas] actualizarNube:', e); }
+    return docId;
+  } catch(e) {
+    console.error('[notas] actualizarNube:', e);
+    return d.id;
+  }
 };
 
 const eliminarNube = async (id) => {
   const wi = wiAuth.user; if (!wi?.email) return;
   try {
     const { db, doc, deleteDoc } = await getFS();
-    await deleteDoc(doc(db, 'notas', getDocId({ id }, wi)));
+    const docId = getDocId({ id }, wi);
+    await deleteDoc(doc(db, 'notas', docId));
+    if (docId.includes('_')) {
+      const oldDocId = docId.replace('_', '');
+      try {
+        await deleteDoc(doc(db, 'notas', oldDocId));
+      } catch (e) {}
+    }
   } catch(e) { console.error('[notas] eliminarNube:', e); }
 };
 
@@ -520,16 +561,28 @@ export const init = async () => {
 
         // Sincronizar silenciosamente
         const op = docToSave.synced ? actualizarNube(docToSave) : guardarNube(docToSave);
-        op.then(() => {
+        op.then((syncedId) => {
+          const oldId = docToSave.id;
+          if (syncedId && syncedId !== oldId) {
+            docToSave.id = syncedId;
+            openTabs = openTabs.map(tid => tid === oldId ? syncedId : tid);
+            localStorage.setItem('open_tabs', JSON.stringify(openTabs));
+            if (act && act.id === oldId) {
+              act.id = syncedId;
+            }
+            renderLista();
+          }
           docToSave.synced = true;
           docToSave.actualizado = Date.now();
           ls.set(docs);
           
           // Cambiar a verde
           const $itemCloud = $(`#wd_sb_list .wd_doc_item[data-id="${docToSave.id}"] .fa-arrows-rotate`);
-          $itemCloud.removeClass('fa-arrows-rotate wd_spin')
-                    .addClass('fa-cloud wd_cloud_ok')
-                    .attr('data-witip', 'Sincronizado en la nube ☁️');
+          if ($itemCloud.length) {
+            $itemCloud.removeClass('fa-arrows-rotate wd_spin')
+                      .addClass('fa-cloud wd_cloud_ok')
+                      .attr('data-witip', 'Sincronizado en la nube ☁️');
+          }
           
           const $hdrCloudNew = $('#wd_hdr_auth .fa-arrows-rotate');
           if ($hdrCloudNew.length) {
@@ -705,18 +758,30 @@ export const init = async () => {
 
         // Guardado real en segundo plano
         const op = docToSave.synced ? actualizarNube(docToSave) : guardarNube(docToSave);
-        
-        op.then(() => {
+
+        op.then((syncedId) => {
+          const oldId = docToSave.id;
+          if (syncedId && syncedId !== oldId) {
+            docToSave.id = syncedId;
+            openTabs = openTabs.map(tid => tid === oldId ? syncedId : tid);
+            localStorage.setItem('open_tabs', JSON.stringify(openTabs));
+            if (act && act.id === oldId) {
+              act.id = syncedId;
+            }
+            renderLista();
+          }
           docToSave.synced = true;
           docToSave.actualizado = Date.now();
           ls.set(docs);
-          
+
           // Cambiar silenciosamente a verde en segundo plano
           const $itemCloud = $(`#wd_sb_list .wd_doc_item[data-id="${docToSave.id}"] .fa-arrows-rotate`);
-          $itemCloud.removeClass('fa-arrows-rotate wd_spin')
-                    .addClass('fa-cloud wd_cloud_ok')
-                    .attr('data-witip', 'Sincronizado en la nube ☁️');
-          
+          if ($itemCloud.length) {
+            $itemCloud.removeClass('fa-arrows-rotate wd_spin')
+                      .addClass('fa-cloud wd_cloud_ok')
+                      .attr('data-witip', 'Sincronizado en la nube ☁️');
+          }
+
           if (act && act.id === docToSave.id) {
             updateMeta(act);
             renderAuthHeader(wiAuth.user, act);
