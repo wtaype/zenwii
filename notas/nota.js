@@ -4,6 +4,7 @@ import { app, version } from './wii.js';
 import { showi, Notificacion, wiAuth, wiTip, wicopy, getls, savels, Saludar, wiFade, wiTiempo, formatearFechaHora, avatar, extraerTextoPlano, abrirModal, cerrarTodos } from './widev.js';
 import { renderHeader, renderAuthHeader } from './header.js';
 import { renderFooter } from './footer.js';
+import { htmlToMarkdown, markdownToHtml } from './convertirMd.js';
 
 // ── CUSTOM WITIP POSITIONING OVERRIDE (without touching widev.js) ──────────
 if (!$('#wiTip-custom-css').length) {
@@ -135,18 +136,18 @@ export const render = () => `
   <div class="wd_workspace">
     <!-- SIDEBAR -->
     <aside id="wd_sidebar" class="wd_sidebar">
-      <div class="wd_sb_actions_panel">
-        <input type="text" id="wd_in_tit" class="wd_doc_title_sb" placeholder="Título del documento..." autocomplete="off">
-        <div style="display:flex; gap:1vh; margin-top:1.5vh;">
-          <button id="wd_btn_save" class="wd_btn_main" style="flex:1; justify-content:center;"><i class="fas fa-save"></i> Guardar</button>
-          <button id="wd_btn_del" class="wd_btn_sec wd_btn_del_doc" ${wiTip('Eliminar permanentemente', undefined, 'error')}><i class="fas fa-trash-can"></i></button>
-        </div>
-      </div>
       <div class="wd_sb_head">
         <h3 id="wd_saludo">Archivos</h3>
         <div style="display:flex; gap: 5px;">
           <button id="wd_btn_refresh" class="wd_sb_btn" style="display:none" ${wiTip('Actualizar desde la nube')}><i class="fas fa-rotate-right"></i></button>
           <button id="wd_btn_new" class="wd_sb_btn" ${wiTip('Nuevo Documento')}><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="wd_sb_actions_panel">
+        <input type="text" id="wd_in_tit" class="wd_doc_title_sb" placeholder="Título del documento..." autocomplete="off">
+        <div style="display:flex; gap:1vh; margin-top:1.5vh;">
+          <button id="wd_btn_save" class="wd_btn_main" style="flex:1; justify-content:center;"><i class="fas fa-save"></i> Guardar</button>
+          <button id="wd_btn_del" class="wd_btn_sec wd_btn_del_doc" ${wiTip('Eliminar permanentemente', undefined, 'error')}><i class="fas fa-trash-can"></i></button>
         </div>
       </div>
       <div id="wd_sb_list" class="wd_sb_list">
@@ -219,6 +220,7 @@ const guardarNube = async (d) => {
       email: wi.email,
       titulo: String(d.titulo || ''),
       contenido: String(d.contenido || ''),
+      contenidoMd: htmlToMarkdown(d.contenido || ''),
       pin: !!d.pin,
       creado: guardadoCreado,
       actualizado: guardadoActualizado
@@ -237,6 +239,7 @@ const actualizarNube = async (d) => {
       email: wi.email,
       titulo: String(d.titulo || ''),
       contenido: String(d.contenido || ''),
+      contenidoMd: htmlToMarkdown(d.contenido || ''),
       pin: !!d.pin,
       actualizado: guardadoActualizado
     }, { merge: true });
@@ -261,7 +264,8 @@ const cargarNube = async () => {
       return {
         id: x.id || docSnap.id,
         titulo: x.titulo || '',
-        contenido: x.contenido || '',
+        contenido: x.contenido || (x.contenidoMd ? markdownToHtml(x.contenidoMd) : ''),
+        contenidoMd: x.contenidoMd || '',
         pin: !!x.pin,
         creado: x.creado?.toMillis?.() || x.creado || Date.now(),
         actualizado: x.actualizado?.toMillis?.() || x.actualizado || Date.now(),
@@ -436,7 +440,7 @@ export const init = async () => {
 
   const crearNuevo = () => {
     docs = docs.filter(n => !(n.id.startsWith('ej') && (n.titulo === 'Documento de Ejemplo' || n.titulo === ''))); 
-    const n = { id: uid(), titulo: '', contenido: '', pin: false, creado: Date.now(), actualizado: Date.now(), synced: false };
+    const n = { id: uid(), titulo: '', contenido: '', contenidoMd: '', pin: false, creado: Date.now(), actualizado: Date.now(), synced: false };
     docs.unshift(n);
     ls.set(docs);
     
@@ -552,6 +556,7 @@ export const init = async () => {
     if (!act) return;
     act.titulo = $('#wd_in_tit').val().trim();
     act.contenido = $('#wd_editor').html();
+    act.contenidoMd = htmlToMarkdown(act.contenido);
     act.actualizado = Date.now();
     ls.set(docs);
     

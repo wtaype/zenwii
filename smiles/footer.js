@@ -43,7 +43,7 @@ if (!$('.foo').length) $('body').append(footer());
 if (!$('#wi_bg_style').length) $("head").append(`<style id="wi_bg_style">:root{--bgim:url("${import.meta.env.BASE_URL}wpuntos.svg")}body{background: var(--bgim), var(--bg)}</style>`);
 
 // ── BANNER COOKIES ────────────────────────────────────────────────────────────
-const CK_KEY = 'cookies';
+const CK_KEY = 'cookiesPrivacidad';
 
 const cerrarBanner = (val) => {
   savels(CK_KEY, val);

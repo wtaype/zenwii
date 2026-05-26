@@ -177,7 +177,7 @@ const redir = wi => {
 };
 
 const entrar = wi => {
-  wiAuth.login(wi, 7, ['wiSmart']);
+  wiAuth.login(wi, 7, ['wiSmart','cookiesPrivacidad']);
   if (wi?.tema) { localStorage.wiTema = wi.tema; tema(wi.tema); }
   if (esModal()) cerrarTodos();
   Mensaje(`<i class="fa-solid fa-hand-wave"></i> Bienvenido ${wi?.nombre || ''}`, 'success');

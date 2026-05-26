@@ -56,7 +56,7 @@ window.addEventListener('winavigate', ({ detail: { norm } }) => renderHeader(wiA
 // ── EVENTOS GLOBALES ──────────────────────────────────────────────────────────
 $(document).on('click', '.bt_salir', async () => {
   const { salir } = await import('./todos/login.js');
-  salir(['wiTema', 'wiSmart']);
+  wisafe.salir(['wiTema', 'wiSmart', 'cookiesPrivacidad']);
 });
 
 $(document).on('mouseenter touchstart', '.bt_auth', () => import('./todos/login.js'));
