@@ -1,0 +1,1 @@
+import"./rutas-B_x8p2ls.js";import{O as e,T as t,r as n}from"./firebase-D3TdL7f_.js";var r=new Set([`zenwii.web.app`,void 0,`notaswii.app`,`localhost`]).has(window.location.hostname)?e({apiKey:void 0,authDomain:void 0,projectId:void 0,storageBucket:void 0,messagingSenderId:void 0,appId:void 0,measurementId:void 0}):null,i=r?n(r):null,a=r?t(r):null;export{a as n,i as t};
