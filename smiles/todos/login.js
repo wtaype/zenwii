@@ -177,7 +177,7 @@ const redir = wi => {
 };
 
 const entrar = wi => {
-  wiAuth.login(wi, 7, ['wiSmart','cookiesPrivacidad']);
+  wiAuth.login(wi, 7, ['wiSmart','cookiesPrivacidad','superFun']);
   if (wi?.tema) { localStorage.wiTema = wi.tema; tema(wi.tema); }
   if (esModal()) cerrarTodos();
   Mensaje(`<i class="fa-solid fa-hand-wave"></i> Bienvenido ${wi?.nombre || ''}`, 'success');
@@ -465,7 +465,7 @@ export const abrirLogin = (tipo = 'login') => {
 export const salir = async (keep = []) => {
   sessionStorage.removeItem('vault_unlocked');
   try { await signOut(auth); } catch(e) { console.error('signOut:', e); }
-  wiAuth.logout(keep);
+  wiAuth.logout(['superFun', ...keep]);
 };
 
 export const cleanup = () => { $(document).off('.wi'); };

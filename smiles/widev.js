@@ -440,12 +440,12 @@ export function getsaves(sel, attr, fn) {
   });
 }
 
-// SUPERFUN v1.0 — Ejecución diferida de funciones tras interacción física
+// SUPERFUN v1.1 — Ejecución diferida de funciones persistente (Infinita)
 export const superFun = (() => {
-  const c = getls('superFun');
+  const c = localStorage.getItem('superFun') === 'true';
   const run = (fn) => {
     try { fn(); } catch(e) { console.error('superFun:', e); }
-    savels('superFun', 1);
+    localStorage.setItem('superFun', 'true');
   };
   return (fn) => c ? run(fn) : $(document).one('touchstart scroll click mousemove', () => run(fn));
 })();

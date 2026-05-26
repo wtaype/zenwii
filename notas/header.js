@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { wiTip, avatar, wiAuth } from './widev.js';
+import { wiTip, avatar, wiAuth, superFun } from './widev.js';
 
 export const renderHeader = () => `
   <header class="wd_header">
@@ -113,3 +113,19 @@ export const renderAuthHeader = (wi, act) => {
     `);
   }
 };
+
+const salir = () => !window.isRel && (window.isRel = 1) && 
+  import('../smiles/todos/login.js').then(m => 
+    m.salir(['wiTema', 'wiSmart', 'cookiesPrivacidad', 'superFun']).then(() => location.reload()));
+
+
+superFun(async () => {
+  const [{ auth }, { onAuthStateChanged }] = await Promise.all([import('./firebase.js'), import('firebase/auth')]);
+  onAuthStateChanged(auth, u => !u && wiAuth.user && salir());
+});
+
+window.addEventListener('storage', e => (!e.key || e.key === 'wiSmile') && location.reload());
+
+
+
+

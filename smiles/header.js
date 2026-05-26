@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import { app, icon } from './wii.js';
 import { rutas, NAV } from './rutas.js';
-import { Mensaje, wiAuth } from './widev.js';
+import { Mensaje, wiAuth, superFun } from './widev.js';
 
 // ── LOGO — generado desde wii.js ─────────────────────────────────────────────
 const LOGO = `<a href="/"><i class="fa-solid ${icon}"></i> ${app}</a>`;
@@ -46,12 +46,13 @@ if (!document.querySelector('.movil_drawer')) {
 $(document).on('click', '.wimenu', () => $('body').addClass('movil_open'));
 $(document).on('click', '.movil_close, .movil_overlay, .movil_nav .nv_item, .movil_nav button', () => $('body').removeClass('movil_open'));
 
-// ── AUTH LISTENER ─────────────────────────────────────────────────────────────
-wiAuth.on(wi => wi ? renderHeader(wi) : (renderHeader(), rutas.navigate('/')));
-const wi = wiAuth.user; wi ? renderHeader(wi) : renderHeader();
-
-// ── ROUTE LISTENER — re-renderiza el nav en cada navegación SPA ───────────────
-window.addEventListener('winavigate', ({ detail: { norm } }) => renderHeader(wiAuth.user, norm));
+// ── AUTH LISTENER + ROUTE LISTENER — re-renderiza el nav en cada navegación SPA  ─────────────────────────────────────────────────
+function superAuth(){
+  wiAuth.on(wi => wi ? renderHeader(wi) : (renderHeader(), rutas.navigate('/')));
+  const wi = wiAuth.user; wi ? renderHeader(wi) : renderHeader();
+  
+  window.addEventListener('winavigate', ({ detail: { norm } }) => renderHeader(wiAuth.user, norm));
+}superAuth();
 
 // ── EVENTOS GLOBALES ──────────────────────────────────────────────────────────
 $(document).on('click', '.bt_salir', async () => {
@@ -66,6 +67,13 @@ $(document).on('click', '.bt_auth', async function () {
 });
 
 
-     const { auth } = await import('./firebase.js');
-      const { onAuthStateChanged } = await import('firebase/auth');
-      onAuthStateChanged(auth, u => !u && (console.log('hola amigo')));
+const salir = () => !window.isRel && (window.isRel = 1) && 
+  import('./todos/login.js').then(m => 
+    m.salir(['wiTema', 'wiSmart', 'cookiesPrivacidad', 'superFun']).then(() => location.reload()));
+
+superFun(async () => {
+  const [{ auth }, { onAuthStateChanged }] = await Promise.all([import('./firebase.js'), import('firebase/auth')]);
+  onAuthStateChanged(auth, u => !u && wiAuth.user && salir());
+});
+
+window.addEventListener('storage', e => (!e.key || e.key === 'wiSmile') && location.reload());
