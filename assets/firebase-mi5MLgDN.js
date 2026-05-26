@@ -1,0 +1,1 @@
+import"./nota-DFsfBoKo.js";import{h as e,k as t,x as n}from"./firebase-D_Qc_hgv.js";var r=new Set([`zenwii.web.app`,void 0,`notaswii.app`,`localhost`]).has(window.location.hostname)?t({apiKey:void 0,authDomain:void 0,projectId:void 0,storageBucket:void 0,messagingSenderId:void 0,appId:void 0,measurementId:void 0}):null,i=r?n(r):null,a=r?e(r):null;export{i as auth,a as db};
