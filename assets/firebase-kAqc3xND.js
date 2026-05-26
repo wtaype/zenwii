@@ -1,0 +1,1 @@
+import"./wii-CjU0lHmj.js";import{$t as e,Jn as t,Mn as n}from"./firebase-WP_1NxOL.js";var r=new Set([`zenwii.web.app`,void 0,`notaswii.app`,`localhost`]).has(window.location.hostname)?t({apiKey:void 0,authDomain:void 0,projectId:void 0,storageBucket:void 0,messagingSenderId:void 0,appId:void 0,measurementId:void 0}):null;r&&n(r);var i=r?e(r):null;export{i as db};

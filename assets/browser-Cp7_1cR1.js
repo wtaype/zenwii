@@ -1,0 +1,1 @@
+import{t as e}from"./vendor-BuoCFfzO.js";export default e();
