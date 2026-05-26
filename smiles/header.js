@@ -56,7 +56,7 @@ window.addEventListener('winavigate', ({ detail: { norm } }) => renderHeader(wiA
 // ── EVENTOS GLOBALES ──────────────────────────────────────────────────────────
 $(document).on('click', '.bt_salir', async () => {
   const { salir } = await import('./todos/login.js');
-  wisafe.salir(['wiTema', 'wiSmart', 'cookiesPrivacidad']);
+  salir(['wiTema', 'wiSmart']);
 });
 
 $(document).on('mouseenter touchstart', '.bt_auth', () => import('./todos/login.js'));
@@ -64,3 +64,8 @@ $(document).on('click', '.bt_auth', async function () {
   const { abrirLogin } = await import('./todos/login.js');
   abrirLogin($(this).hasClass('registrar') ? 'registrar' : 'login');
 });
+
+
+     const { auth } = await import('./firebase.js');
+      const { onAuthStateChanged } = await import('firebase/auth');
+      onAuthStateChanged(auth, u => !u && (console.log('hola amigo')));

@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { wiTip, avatar } from './widev.js';
+import { wiTip, avatar, wiAuth } from './widev.js';
 
 export const renderHeader = () => `
   <header class="wd_header">

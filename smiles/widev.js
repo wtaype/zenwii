@@ -439,3 +439,13 @@ export function getsaves(sel, attr, fn) {
     if (val) fn($(this), val);
   });
 }
+
+// SUPERFUN v1.0 — Ejecución diferida de funciones tras interacción física
+export const superFun = (() => {
+  const c = getls('superFun');
+  const run = (fn) => {
+    try { fn(); } catch(e) { console.error('superFun:', e); }
+    savels('superFun', 1);
+  };
+  return (fn) => c ? run(fn) : $(document).one('touchstart scroll click mousemove', () => run(fn));
+})();

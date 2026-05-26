@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión - Zenwii Desktop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: radial-gradient(circle at 12% 8%, rgba(41, 199, 46, 0.15), transparent 35%), #eaffec;
+      color: #1f1f1f;
+      text-align: center;
+      padding: 20px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      padding: 40px 30px;
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(16, 118, 20, 0.08);
+      width: 100%;
+      max-width: 420px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      animation: enter 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      box-sizing: border-box;
+    }
+    @keyframes enter {
+      from { opacity: 0; transform: translateY(12px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .logo-container {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #29c72e, #20a724);
+      color: white;
+      font-size: 28px;
+      box-shadow: 0 10px 24px rgba(41, 199, 46, 0.24);
+    }
+    h1 {
+      font-size: 22px;
+      color: #20a724;
+      margin: 0 0 10px;
+      font-weight: 700;
+    }
+    p {
+      font-size: 13px;
+      color: #4a774c;
+      margin: 0 0 24px;
+      line-height: 1.5;
+    }
+    .btn {
+      width: 100%;
+      height: 46px;
+      background: linear-gradient(135deg, #29c72e, #20a724);
+      color: white;
+      border: 0;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 10px 24px rgba(41, 199, 46, 0.2);
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(41, 199, 46, 0.3);
+    }
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .form-group {
+      text-align: left;
+      margin-bottom: 16px;
+      width: 100%;
+    }
+    .form-group label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #4a774c;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .form-input {
+      width: 100%;
+      height: 42px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(41, 199, 46, 0.24);
+      background: rgba(255, 255, 255, 0.8);
+      color: #1f1f1f;
+      outline: none;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-input:focus {
+      border-color: #20a724;
+      box-shadow: 0 0 0 3px rgba(41, 199, 46, 0.15);
+      background: white;
+    }
+    .checkbox-container {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      text-align: left;
+      margin: 18px 0;
+      cursor: pointer;
+    }
+    .checkbox-container input {
+      margin-top: 3px;
+      cursor: pointer;
+    }
+    .checkbox-label {
+      font-size: 11px;
+      color: #4a774c;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    .checkbox-label a {
+      color: #20a724;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .checkbox-label a:hover {
+      text-decoration: underline;
+    }
+    #error {
+      color: #ff3849;
+      margin-top: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .success-icon {
+      font-size: 48px;
+      color: #20a724;
+      margin-bottom: 20px;
+      animation: pulse 1s infinite alternate;
+    }
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.08); }
+    }
+  </style>
+</head>
+<body>
+  <!-- CARD 1: INICIO DE SESION -->
+  <div class="card" id="loginCard">
+    <div class="logo-container">
+      <i class="fa-solid fa-feather-pointed"></i>
+    </div>
+    <h1>Zenwii Desktop</h1>
+    <p>Conéctate con tu cuenta de Google para sincronizar tus notas en la nube de forma segura de un extremo a otro.</p>
+    
+    <button class="btn" id="loginBtn" onclick="startLogin()">
+      <i class="fa-brands fa-google"></i> Iniciar sesión con Google
+    </button>
+    <div id="error"></div>
+  </div>
+
+  <!-- CARD 2: COMPLETAR REGISTRO -->
+  <div class="card hidden" id="registerCard">
+    <div class="logo-container">
+      <i class="fa-solid fa-user-plus"></i>
+    </div>
+    <h1>Completar tu Perfil</h1>
+    <p>Ingresa tus datos para activar tu cuenta premium de Zenwii de forma exitosa.</p>
+    
+    <div class="form-group">
+      <label for="usernameInput">Nombre de Usuario</label>
+      <input class="form-input" id="usernameInput" placeholder="Ej. juanito12" type="text" autocomplete="off" />
+    </div>
+    <div class="form-group">
+      <label for="nameInput">Nombre</label>
+      <input class="form-input" id="nameInput" placeholder="Tu nombre" type="text" />
+    </div>
+    <div class="form-group">
+      <label for="lastnameInput">Apellidos</label>
+      <input class="form-input" id="lastnameInput" placeholder="Tus apellidos" type="text" />
+    </div>
+    
+    <div class="checkbox-container" onclick="toggleCheckbox(event)">
+      <input type="checkbox" id="termsCheckbox" />
+      <span class="checkbox-label">
+        Acepto los <a href="#" target="_blank">Términos de Servicio</a> y la <a href="#" target="_blank">Política de Privacidad</a> de Zenwii.
+      </span>
+    </div>
+    
+    <button class="btn" id="registerBtn" onclick="completeRegistration()">
+      <i class="fa-solid fa-check"></i> Aceptar y Continuar
+    </button>
+    <div id="registerError" style="color:#ff3849; margin-top:15px; font-size:12px; font-weight:600;"></div>
+  </div>
+
+  <!-- CARD 3: EXITO -->
+  <div class="card hidden" id="successCard">
+    <i class="fa-solid fa-circle-check success-icon"></i>
+    <h1>¡Autenticación con éxito!</h1>
+    <p id="successMessage">Tu perfil se ha actualizado correctamente. Ya puedes regresar a tu editor Zenwii en Windows.</p>
+    <p style="font-size: 11px; color: #689b6a;"><i class="fa-solid fa-circle-notch fa-spin"></i> Redirigiendo al editor...</p>
+  </div>
+
+  <!-- Scripts oficiales de Firebase -->
+  <script type="module">
+    import { auth, db } from './smiles/firebase.js';
+    import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+    import { doc, getDoc, getDocs, setDoc, collection, query, where, serverTimestamp } from 'firebase/firestore';
+
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+
+
+    let activeUser = null;
+    let activeTokens = null;
+
+    // Abrir popup de Google
+    window.startLogin = function() {
+      const btn = document.getElementById("loginBtn");
+      const errDiv = document.getElementById("error");
+      
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Conectando con Google...';
+      errDiv.innerText = "";
+
+      signInWithPopup(auth, provider).then(async (result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        activeTokens = {
+          accessToken: credential.accessToken,
+          idToken: credential.idToken
+        };
+        activeUser = result.user;
+
+        // Comprobar si ya existe el perfil en Firestore
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Verificando perfil...';
+        
+        const q = query(collection(db, "smiles"), where("uid", "==", activeUser.uid));
+        const snap = await getDocs(q);
+        
+        if (!snap.empty) {
+          const profile = snap.docs[0].data();
+          if (profile.usuario && profile.terminos) {
+            // Perfil completo: Redirigir directamente
+            showSuccessAndRedirect();
+            return;
+          }
+        }
+
+        // Perfil incompleto: Mostrar formulario de registro
+        showRegisterForm();
+      }).catch(err => {
+        console.error(err);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-brands fa-google"></i> Iniciar sesión con Google';
+        errDiv.innerText = "Error: " + (err.message || "No se pudo conectar.");
+      });
+    }
+
+    function showRegisterForm() {
+      document.getElementById("loginCard").classList.add("hidden");
+      document.getElementById("registerCard").classList.remove("hidden");
+      
+      // Auto-rellenar nombre
+      if (activeUser && activeUser.displayName) {
+        const parts = activeUser.displayName.split(" ");
+        document.getElementById("nameInput").value = parts[0] || "";
+        document.getElementById("lastnameInput").value = parts.slice(1).join(" ") || "";
+        
+        // Sugerir usuario
+        const cleanName = activeUser.displayName.toLowerCase().replace(/[^a-z0-9_-]/g, "");
+        document.getElementById("usernameInput").value = cleanName.slice(0, 15);
+      }
+    }
+
+    window.toggleCheckbox = function(event) {
+      if (event.target.tagName !== "INPUT" && event.target.tagName !== "A") {
+        const checkbox = document.getElementById("termsCheckbox");
+        checkbox.checked = !checkbox.checked;
+      }
+    }
+
+    // Enviar y validar formulario de registro
+    window.completeRegistration = async function() {
+      const usernameInput = document.getElementById("usernameInput").value.trim().toLowerCase().replace(/[^a-z0-9_-]/g, "");
+      const nameInput = document.getElementById("nameInput").value.trim();
+      const lastnameInput = document.getElementById("lastnameInput").value.trim();
+      const termsCheckbox = document.getElementById("termsCheckbox").checked;
+      const regBtn = document.getElementById("registerBtn");
+      const regError = document.getElementById("registerError");
+
+      regError.innerText = "";
+
+      if (usernameInput.length < 4) {
+        regError.innerText = "El usuario debe tener al menos 4 caracteres válidos.";
+        return;
+      }
+      if (!nameInput) {
+        regError.innerText = "Por favor ingresa tu nombre.";
+        return;
+      }
+      if (!lastnameInput) {
+        regError.innerText = "Por favor ingresa tus apellidos.";
+        return;
+      }
+      if (!termsCheckbox) {
+        regError.innerText = "Debes aceptar los términos y condiciones.";
+        return;
+      }
+
+      regBtn.disabled = true;
+      regBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Registrando perfil...';
+
+      try {
+        // Verificar disponibilidad de usuario
+        const userDoc = await getDoc(doc(db, "smiles", usernameInput));
+        if (userDoc.exists()) {
+          regBtn.disabled = false;
+          regBtn.innerHTML = '<i class="fa-solid fa-check"></i> Aceptar y Continuar';
+          regError.innerText = "El nombre de usuario ya está en uso. Elige otro.";
+          return;
+        }
+
+        // Guardar perfil completo en la colección smiles
+        await setDoc(doc(db, "smiles", usernameInput), {
+          uid: activeUser.uid,
+          usuario: usernameInput,
+          nombre: nameInput,
+          apellidos: lastnameInput,
+          email: activeUser.email || "",
+          avatar: activeUser.photoURL || "",
+          rol: "smile",
+          estado: "activo",
+          terminos: true,
+          bio: "",
+          plan: "free",
+          segmento: "creador",
+          verificado: false,
+          registradoPor: "google-desktop",
+          creado: serverTimestamp(),
+          actualizado: serverTimestamp()
+        });
+
+        // Mostrar pantalla de éxito
+        showSuccessAndRedirect();
+      } catch (error) {
+        console.error(error);
+        regBtn.disabled = false;
+        regBtn.innerHTML = '<i class="fa-solid fa-check"></i> Aceptar y Continuar';
+        regError.innerText = "Error al guardar el perfil: " + error.message;
+      }
+    }
+
+    function showSuccessAndRedirect() {
+      document.getElementById("loginCard").classList.add("hidden");
+      document.getElementById("registerCard").classList.add("hidden");
+      document.getElementById("successCard").classList.remove("hidden");
+      
+      // Redirigir en 2 segundos
+      setTimeout(() => {
+        window.location.href = `http://localhost:1425/?idToken=${activeTokens.idToken}&accessToken=${activeTokens.accessToken}`;
+      }, 1500);
+    }
+  </script>
+</body>
+</html>

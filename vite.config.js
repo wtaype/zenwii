@@ -10,6 +10,7 @@ export default defineConfig({
       input: {
         main: 'index.html',
         nota: 'nota.html',
+        notawin: 'notawin.html',
       },
       output: {
         manualChunks: id => {
